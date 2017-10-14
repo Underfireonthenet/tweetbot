@@ -1,5 +1,11 @@
+require "kemal"
 require "./tweetbot/*"
 
-module Tweetbot
-  # TODO Put your code here
+#twitter_client = TwitterClient.new
+
+get "/tweet" do |env|
+  #twitter_client.tweet("test")
+  render "src/tweetbot/views/tweet.ecr"
 end
+
+Kemal.run
