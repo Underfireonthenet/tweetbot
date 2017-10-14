@@ -1,6 +1,18 @@
 name: tweetbot
 version: 0.1.0
 
+dependencies:
+  kemal:
+    github: sdogruyol/kemal
+    branch: master
+  db:
+    github: crystal-lang/crystal-db
+    branch: master
+  twitter-crystal:
+    github: sferik/twitter-crystal
+    version: ~> 0.2.0
+
+
 authors:
   - msky026 <pref.myu@gmail.com>
 
