@@ -1,5 +1,7 @@
 require "./twitter_client"
 
+time = Time.new
+
 MESSAGES = {
   "tokyomx" => "TOKYO MX BS11 「ブレンド・S」 はじまるよー #ブレンドS",
   "atx" => "ATX 「ブレンド・S」 はじまるよー #ブレンドS",
@@ -9,13 +11,13 @@ MESSAGES = {
 }
 
 twitter_client = TwitterClient.new
-time = Time.new
+twitter_client.tweet("test #{time}") if ENV["TEST"]?
 
-twitter_client.tweet(MESSAGES["tokyomx"]) if tokyomx?(time)
-twitter_client.tweet(MESSAGES["atx"]) if atx?(time)
-twitter_client.tweet(MESSAGES["nico"]) if nico?(time)
-twitter_client.tweet(MESSAGES["ameba"]) if ameba?(time)
-twitter_client.tweet(MESSAGES["bandai"]) if bandai?(time)
+twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["tokyomx"]}") if tokyomx?(time)
+twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["atx"]}") if atx?(time)
+twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["nico"]}") if nico?(time)
+twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["ameba"]}") if ameba?(time)
+twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["bandai"]}") if bandai?(time)
 
 def tokyomx?(time)
   time.sunday? && time.hour == 0 && time.minute >=20 && time.minute <= 29

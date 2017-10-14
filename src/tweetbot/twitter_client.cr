@@ -1,7 +1,7 @@
 require "twitter-crystal"
 
 class TwitterClient
-	@client : Twitter::REST::Client
+  @client : Twitter::REST::Client
   def initialize
     consumer_key                 = ENV["CONSUMER_KEY"]
     consumer_secret              = ENV["CONSUMER_SECRET"]
