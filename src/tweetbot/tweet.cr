@@ -1,8 +1,11 @@
 require "./twitter_client"
 
 MESSAGES = [
-  "ブレンド・S はじまるよー #ブレンドS",
+  "TOKYO MX 「ブレンド・S」 はじまるよー #ブレンドS",
+  "ＢＳ１１ 「ブレンド・S」 はじまるよー #ブレンドS",
 ]
 
 twitter_client = TwitterClient.new
-twitter_client.tweet("tweet bot test")
+MESSAGES.each do |message|
+  twitter_client.tweet(message)
+end
