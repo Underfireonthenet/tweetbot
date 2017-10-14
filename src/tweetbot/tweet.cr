@@ -12,9 +12,9 @@ twitter_client.tweet(MESSAGES["tokyomx"]) if tokyomx?(time)
 twitter_client.tweet(MESSAGES["bs11"]) if bs11?(time)
 
 def tokyomx?(time)
-  time.sunday? && time.hour == 0 && time.minute >=19 && time.minute <= 21
+  time.sunday? && time.hour == 0 && time.minute >=20 && time.minute <= 29
 end
 
 def bs11?(time)
-  time.sunday? && time.hour == 0 && time.minute >=19 && time.minute <= 21
+  time.sunday? && time.hour == 0 && time.minute >=20 && time.minute <= 29
 end
