@@ -1,0 +1,13 @@
+name: tweetbot
+version: 0.1.0
+
+authors:
+  - msky026 <pref.myu@gmail.com>
+
+targets:
+  tweetbot:
+    main: src/tweetbot.cr
+
+crystal: 0.23.0
+
+license: MIT
