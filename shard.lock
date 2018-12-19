@@ -2,21 +2,33 @@ version: 1.0
 shards:
   db:
     github: crystal-lang/crystal-db
-    commit: 1e882e35d201d3fc8f7e0f549c0844e4fbe614f5
+    version: 0.5.1
+
+  exception_page:
+    github: crystal-loot/exception_page
+    version: 0.1.1
+
+  google-api-client-cr:
+    github: msky026/google-api-client-cr
+    commit: 4fe6f2eef3c4f2f1b6c97e24dfd6acfe85ee6a22
 
   kemal:
     github: sdogruyol/kemal
-    commit: 0b9628dfea81e4708f409ab87bc946c449f79c21
+    version: 0.25.0
 
   kilt:
     github: jeromegn/kilt
     version: 0.4.0
+
+  pg:
+    github: will/crystal-pg
+    version: 0.15.0
 
   radix:
     github: luislavena/radix
     version: 0.3.8
 
   twitter-crystal:
-    github: sferik/twitter-crystal
-    version: 0.2.0
+    github: msky026/twitter-crystal
+    version: 0.2.1
 

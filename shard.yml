@@ -4,14 +4,17 @@ version: 0.1.0
 dependencies:
   kemal:
     github: sdogruyol/kemal
-    branch: master
+    version: 0.25.0
   db:
     github: crystal-lang/crystal-db
-    branch: master
+  pg:
+    github: will/crystal-pg
   twitter-crystal:
-    github: sferik/twitter-crystal
+    github: msky026/twitter-crystal
     version: ~> 0.2.0
-
+  google-api-client-cr:
+    github: msky026/google-api-client-cr
+    branch: master
 
 authors:
   - msky026 <pref.myu@gmail.com>
@@ -20,6 +23,6 @@ targets:
   tweetbot:
     main: src/tweetbot.cr
 
-crystal: 0.23.0
+crystal: 0.27.0
 
 license: MIT

@@ -1,40 +1,40 @@
+require "google-api-client-cr"
 require "./twitter_client"
-
-time = Time.new
-
-MESSAGES = {
-  "tokyomx" => "TOKYO MX BS11 「ブレンド・S」 はじまるよー #ブレンドS",
-  "atx" => "ATX 「ブレンド・S」 はじまるよー #ブレンドS",
-  "nico" => "ニコニコ生放送 「ブレンド・S」 はじまるよー #ブレンドS",
-  "ameba" => "AmebaTV 「ブレンド・S」 はじまるよー #ブレンドS",
-  "bandai" => "バンダイチャンネル 「ブレンド・S」 はじまるよー #ブレンドS",
-}
+require "db"
+require "pg"
+database_url = ENV["DATABASE_URL"]? || "postgres://preface@localhost:5432/tweetbot_development"
 
 twitter_client = TwitterClient.new
-twitter_client.tweet("test #{time}") if ENV["TEST"]?
+youtube = Google::Apis::YoutubeV3::YouTubeService.new
 
-twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["tokyomx"]}") if tokyomx?(time)
-twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["atx"]}") if atx?(time)
-twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["nico"]}") if nico?(time)
-twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["ameba"]}") if ameba?(time)
-twitter_client.tweet("#{time.month}月#{time.day}日 #{MESSAGES["bandai"]}") if bandai?(time)
+# https://www.googleapis.com/youtube/v3/search?part=id&channelId=UCWzenZSy9GJBcPzdSm-UX5w&order=date
+result = youtube.list_searches("id,snippet", channel_id: "UCWzenZSy9GJBcPzdSm-UX5w", order: "date", max_results: 5)
+channel_id = "UCWzenZSy9GJBcPzdSm-UX5w"
+video_id = result["items"][0]["id"]["videoId"].to_s
+title = result["items"][0]["snippet"]["title"]
 
-def tokyomx?(time)
-  time.sunday? && time.hour == 0 && time.minute >=20 && time.minute <= 29
+db = DB.open(database_url)
+
+sql = "select id, channel_id, video_id from videos where video_id = $1::text"
+params = [] of String
+params << video_id
+videos = [] of Hash(String, String | Int32)
+db.query(sql, params) do |rs|
+  rs.each do
+    video = {} of String => String | Int32
+    video["id"] = rs.read(Int32)
+    video["title"] = rs.read(String)
+    video["content"] = rs.read(String)
+    videos << video
+  end
 end
 
-def atx?(time)
-  time.monday? && time.hour == 19 && time.minute >=50 && time.minute <= 59
+unless videos.size == 0
+  new_params = [] of String
+  new_params << videos.first["channel_id"].to_s
+  new_params << videos.first["video_id"].to_s
+  db.exec("insert into videos(channel_id, video_id) values($1::text, $2::text)", new_params)
+  message = "#{title} https://www.youtube.com/watch?v=#{video_id} #モンスト #モンストアニメ"
+  twitter_client.tweet(message)
 end
-
-def nico?(time)
-  time.tuesday? && time.hour == 22 && time.minute >=50 && time.minute <= 59
-end
-
-def ameba?(time)
-  time.tuesday? && time.hour == 23 && time.minute >=20 && time.minute <= 29
-end
-
-def bandai?(time)
-  time.tuesday? && time.hour == 11 && time.minute >=50 && time.minute <= 59
-end
+db.close
