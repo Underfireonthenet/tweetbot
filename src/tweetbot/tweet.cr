@@ -33,7 +33,7 @@ if videos.size == 0
   new_params = [] of String
   new_params << channel_id
   new_params << video_id
-  #db.exec("insert into videos(channel_id, video_id) values($1::text, $2::text)", new_params)
+  db.exec("insert into videos(channel_id, video_id) values($1::text, $2::text)", new_params)
   message = "#{title} https://www.youtube.com/watch?v=#{video_id} #モンスト #モンストアニメ"
   twitter_client.tweet(message)
 end
