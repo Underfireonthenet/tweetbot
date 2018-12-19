@@ -12,6 +12,10 @@ shards:
     github: msky026/google-api-client-cr
     commit: 4fe6f2eef3c4f2f1b6c97e24dfd6acfe85ee6a22
 
+  granite:
+    github: amberframework/granite
+    version: 0.13.0
+
   kemal:
     github: sdogruyol/kemal
     version: 0.25.0

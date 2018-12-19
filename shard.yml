@@ -15,6 +15,9 @@ dependencies:
   google-api-client-cr:
     github: msky026/google-api-client-cr
     branch: master
+  granite:
+    github: amberframework/granite
+    version: 0.13.0
 
 authors:
   - msky026 <pref.myu@gmail.com>

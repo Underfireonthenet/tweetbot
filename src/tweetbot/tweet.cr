@@ -2,7 +2,10 @@ require "google-api-client-cr"
 require "./twitter_client"
 require "db"
 require "pg"
+require "granite/adapter/pg"
 database_url = ENV["DATABASE_URL"]? || "postgres://preface@localhost:5432/tweetbot_development"
+Granite::Adapters << Granite::Adapter::Pg.new({name: "pg", url: database_url})
+require "./models/video"
 
 twitter_client = TwitterClient.new
 youtube = Google::Apis::YoutubeV3::YouTubeService.new
@@ -13,28 +16,11 @@ channel_id = "UCWzenZSy9GJBcPzdSm-UX5w"
 video_id = result["items"][0]["id"]["videoId"].to_s
 title = result["items"][0]["snippet"]["title"]
 
-db = DB.open(database_url)
+video = Video.find_by(video_id: video_id)
 
-sql = "select id, channel_id, video_id from videos where video_id = $1::text"
-params = [] of String
-params << video_id
-videos = [] of Hash(String, String | Int32)
-db.query(sql, params) do |rs|
-  rs.each do
-    video = {} of String => String | Int32
-    video["id"] = rs.read(Int32)
-    video["title"] = rs.read(String)
-    video["content"] = rs.read(String)
-    videos << video
-  end
-end
-
-if videos.size == 0
-  new_params = [] of String
-  new_params << channel_id
-  new_params << video_id
-  db.exec("insert into videos(channel_id, video_id) values($1::text, $2::text)", new_params)
+unless video
+  new_video = Video.new(channel_id: channel_id, video_id: video_id)
+  new_video.save!
   message = "#{title} https://www.youtube.com/watch?v=#{video_id} #モンスト #モンストアニメ"
   twitter_client.tweet(message)
 end
-db.close
