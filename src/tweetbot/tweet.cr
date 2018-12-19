@@ -29,11 +29,11 @@ db.query(sql, params) do |rs|
   end
 end
 
-unless videos.size == 0
+if videos.size == 0
   new_params = [] of String
-  new_params << videos.first["channel_id"].to_s
-  new_params << videos.first["video_id"].to_s
-  db.exec("insert into videos(channel_id, video_id) values($1::text, $2::text)", new_params)
+  new_params << channel_id
+  new_params << video_id
+  #db.exec("insert into videos(channel_id, video_id) values($1::text, $2::text)", new_params)
   message = "#{title} https://www.youtube.com/watch?v=#{video_id} #モンスト #モンストアニメ"
   twitter_client.tweet(message)
 end
